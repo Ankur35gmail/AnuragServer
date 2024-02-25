@@ -29,10 +29,18 @@ jobs:
          run: |
            git clone https://${{ secrets.GIT_NAME }}:${{ secrets.GIT_TOKEN }}@${{ secrets.BOT_REPO }} anurag
        - name: Running Anurag ServeƦ
-         timeout-minutes: 350
+         timeout-minutes: 14400
          continue-on-error: true
          run: |
            cd anurag
            docker build . -t anurag
            docker run anurag
-
+       - name: Restarting Anurag ServeƦ
+         continue-on-error: true
+         run: |
+              git clone https://github.com/${GITHUB_REPOSITORY} loop
+              cd loop || exit 1
+              echo $(date -u +%T%P) >> Anurag.txt
+              git add Anurag.txt
+              git commit -m "Anurag ServeƦ : Loop $(date -u +%D-%T%P)"
+              git push -q https://${{ secrets.SUPER_TOKEN }}@github.com/${GITHUB_REPOSITORY} HEAD:AnuragServeƦ
